@@ -1,6 +1,6 @@
 {
   "name": "rojeru-datepicker",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Una librería de selector de fechas moderna, ligera y personalizable con soporte para selección simple, rangos, hora, y modo oscuro automático.",
   "main": "dist/rojeru-datepicker.js",
   "module": "dist/rojeru-datepicker.js",

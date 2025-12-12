@@ -1,8 +1,8 @@
-# 📅 Rojeru DatePicker
+# 📅 Rojeru DatePicker V1.0.2
 
 Una librería de selector de fechas moderna, ligera y personalizable con soporte para selección simple, rangos, hora, y modo oscuro automático.
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version](https://img.shields.io/badge/version-1.0.2-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Size](https://img.shields.io/badge/size-15KB-yellow)
 
@@ -23,10 +23,10 @@ Una librería de selector de fechas moderna, ligera y personalizable con soporte
 ### Opción 1: CDN (Recomendada)
 ```html
 <!-- CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/rojeru-datepicker@1.0.0/dist/rojeru-datepicker.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/rojeru-datepicker@1.0.2/dist/rojeru-datepicker.min.css">
 
 <!-- JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/rojeru-datepicker@1.0.0/dist/rojeru-datepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/rojeru-datepicker@1.0.2/dist/rojeru-datepicker.min.js"></script>
 ```
 
 ### Opción 2: NPM

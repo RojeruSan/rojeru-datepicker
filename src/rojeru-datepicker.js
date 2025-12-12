@@ -1,5 +1,5 @@
 /**
- * RojeruDatePicker v1.0.1
+ * RojeruDatePicker v1.0.2
  * Autor: Rogelio Urieta Camacho (RojeruSan)
  * Licencia: MIT
  * Requiere: rojeru-datepicker.css
@@ -74,6 +74,7 @@ class RojeruDatePicker {
                 start: null,
                 end: null,
                 time: this.options.includeTime ? '00:00' : null,
+                // ✅ RESTABLECER a la fecha actual
                 currentView: new Date(),
                 inputValue: this.options.input.value || ''
             };
@@ -311,8 +312,21 @@ class RojeruDatePicker {
         this.overlay.dataset.id = 'dp-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
         this.overlay.setAttribute('data-mode', this.options.mode);
 
+        // Renderizar primero
+        this.overlay.innerHTML = this.renderTemplate();
+        document.body.appendChild(this.overlay);
+
+        // Aplicar modo oscuro si es necesario
+        if (this.isDarkMode) {
+            const picker = this.overlay.querySelector('.rojeru-datepicker');
+            if (picker) {
+                picker.classList.add('rojeru-dark-mode');
+            }
+        }
+
+        // ✅ POSICIONAMIENTO MEJORADO
         if (this.options.mode === 'dropdown' && !isMobile) {
-            // Dropdown
+            // Dropdown - aplicar estilos básicos primero
             Object.assign(this.overlay.style, {
                 position: 'absolute',
                 top: `${inputRect.bottom + window.scrollY + 4}px`,
@@ -320,8 +334,15 @@ class RojeruDatePicker {
                 width: `${Math.max(inputRect.width, 320)}px`,
                 zIndex: 10000,
                 background: 'transparent',
-                display: 'block'
+                display: 'block',
+                // Importante para cálculos
+                minWidth: `${Math.max(inputRect.width, 320)}px`
             });
+
+            // Luego ajustar posición
+            setTimeout(() => {
+                this.adjustDropdownPosition();
+            }, 10); // Pequeño delay para que se renderice
         } else {
             // Modal
             Object.assign(this.overlay.style, {
@@ -340,39 +361,19 @@ class RojeruDatePicker {
             });
         }
 
-        // Actualizar detección de modo oscuro
-        this.isDarkMode = this.detectDarkMode();
-
-        this.overlay.innerHTML = '';
-        this.overlay.innerHTML = this.renderTemplate();
-        document.body.appendChild(this.overlay);
-
-        // Aplicar clase de modo oscuro si es necesario
-        if (this.isDarkMode) {
-            const picker = this.overlay.querySelector('.rojeru-datepicker');
-            if (picker) {
-                picker.classList.add('rojeru-dark-mode');
-            }
-        }
-
         this.bindEvents();
         this.updateView();
-
-        // Ajustar posición del dropdown
-        if (this.options.mode === 'dropdown' && !isMobile) {
-            this.adjustDropdownPosition();
-        }
 
         // Enfoque en el primer elemento interactivo
         setTimeout(() => {
             const firstFocusable = this.overlay.querySelector('.rojeru-datepicker-nav.prev') ||
                 this.overlay.querySelector('.rojeru-datepicker-month');
             firstFocusable?.focus();
-        }, 10);
+        }, 50); // Aumentar delay para asegurar renderizado
 
         const overlays = document.querySelectorAll('.rojeru-datepicker-overlay');
         if (overlays.length > 1) {
-            // Mantener solo el último overlay (el más reciente)
+            // Mantener solo el último overlay
             for (let i = 0; i < overlays.length - 1; i++) {
                 overlays[i].remove();
             }
@@ -383,24 +384,166 @@ class RojeruDatePicker {
         const calendar = this.overlay.querySelector('.rojeru-datepicker');
         if (!calendar) return;
 
+        const inputRect = this.options.input.getBoundingClientRect();
         const calendarRect = calendar.getBoundingClientRect();
+        const overlayRect = this.overlay.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
         const viewportWidth = window.innerWidth;
 
-        // Ajustar posición vertical
-        if (this.options.position === 'top' ||
-            (calendarRect.bottom > viewportHeight - 10 && this.options.position !== 'bottom')) {
-            const inputRect = this.options.input.getBoundingClientRect();
-            const overlayRect = this.overlay.getBoundingClientRect();
-            calendar.style.top = 'auto';
-            calendar.style.bottom = `${inputRect.height + 4}px`;
-            this.overlay.style.top = `${inputRect.top + window.scrollY - overlayRect.height - 4}px`;
+        // Resetear estilos primero
+        calendar.style.top = '';
+        calendar.style.bottom = '';
+        calendar.style.left = '';
+        calendar.style.right = '';
+
+        this.overlay.style.top = `${inputRect.bottom + window.scrollY + 4}px`;
+        this.overlay.style.left = `${inputRect.left + window.scrollX}px`;
+
+        // Variables para calcular espacio disponible
+        const spaceBelow = viewportHeight - inputRect.bottom - 10;
+        const spaceAbove = inputRect.top - 10;
+        const spaceRight = viewportWidth - inputRect.right - 10;
+        const spaceLeft = inputRect.left - 10;
+
+        // Calcular dimensiones del calendario
+        const calendarHeight = calendarRect.height;
+        const calendarWidth = calendarRect.width;
+
+        // 1. AJUSTE VERTICAL (arriba/abajo)
+        let verticalPosition = 'below';
+
+        // Si se especificó posición manual, respetarla
+        if (this.options.position === 'top') {
+            verticalPosition = 'above';
+        } else if (this.options.position === 'bottom') {
+            verticalPosition = 'below';
+        } else {
+            // Modo AUTO: decidir dónde cabe mejor
+            if (spaceBelow >= calendarHeight) {
+                // Cabe abajo
+                verticalPosition = 'below';
+            } else if (spaceAbove >= calendarHeight) {
+                // Cabe arriba
+                verticalPosition = 'above';
+            } else {
+                // No cabe ni arriba ni abajo completamente
+                // Elegir donde hay más espacio
+                verticalPosition = spaceBelow >= spaceAbove ? 'below' : 'above';
+
+                // Ajustar altura máxima si es necesario
+                if (verticalPosition === 'below' && spaceBelow < calendarHeight) {
+                    calendar.style.maxHeight = `${Math.max(spaceBelow - 20, 200)}px`;
+                    calendar.style.overflowY = 'auto';
+                } else if (verticalPosition === 'above' && spaceAbove < calendarHeight) {
+                    calendar.style.maxHeight = `${Math.max(spaceAbove - 20, 200)}px`;
+                    calendar.style.overflowY = 'auto';
+                }
+            }
         }
 
-        // Ajustar posición horizontal
-        if (calendarRect.right > viewportWidth - 10) {
-            calendar.style.left = 'auto';
-            calendar.style.right = '0';
+        // Aplicar posición vertical
+        if (verticalPosition === 'above') {
+            this.overlay.style.top = `${inputRect.top + window.scrollY - overlayRect.height - 4}px`;
+            calendar.style.top = 'auto';
+            calendar.style.bottom = `${inputRect.height + 4}px`;
+        } else {
+            this.overlay.style.top = `${inputRect.bottom + window.scrollY + 4}px`;
+        }
+
+        // 2. AJUSTE HORIZONTAL (izquierda/derecha)
+        // Recalcular posición después del ajuste vertical
+        const recalcRect = calendar.getBoundingClientRect();
+
+        let horizontalAlignment = 'left';
+
+        // Verificar si el calendario se sale por la derecha
+        if (recalcRect.right > viewportWidth - 10) {
+            // No cabe a la derecha, probar a la izquierda
+            const leftPosition = inputRect.right - recalcRect.width;
+
+            if (leftPosition >= 10) {
+                // Cabe a la izquierda
+                horizontalAlignment = 'right';
+            } else {
+                // No cabe ni a izquierda ni derecha, centrar
+                horizontalAlignment = 'center';
+            }
+        }
+
+        // Aplicar posición horizontal
+        switch (horizontalAlignment) {
+            case 'right':
+                this.overlay.style.left = `${inputRect.right + window.scrollX - recalcRect.width}px`;
+                calendar.style.left = 'auto';
+                calendar.style.right = '0';
+                break;
+
+            case 'center':
+                // Centrar respecto al input
+                const centerLeft = inputRect.left + (inputRect.width / 2) - (recalcRect.width / 2);
+                const boundedLeft = Math.max(10, Math.min(centerLeft, viewportWidth - recalcRect.width - 10));
+                this.overlay.style.left = `${boundedLeft + window.scrollX}px`;
+                break;
+
+            case 'left':
+            default:
+                // Ya está posicionado a la izquierda por defecto
+                // Solo verificar que no se salga por la derecha y ajustar si es necesario
+                if (recalcRect.right > viewportWidth - 10) {
+                    const shiftLeft = recalcRect.right - (viewportWidth - 10);
+                    this.overlay.style.left = `${parseFloat(this.overlay.style.left) - shiftLeft}px`;
+                }
+                break;
+        }
+
+        // 3. VERIFICACIÓN FINAL - Asegurar que no se sale de la pantalla
+        const finalRect = calendar.getBoundingClientRect();
+
+        // Ajustar si se sale por la derecha
+        if (finalRect.right > viewportWidth - 5) {
+            const shiftAmount = finalRect.right - (viewportWidth - 5);
+            this.overlay.style.left = `${parseFloat(this.overlay.style.left) - shiftAmount}px`;
+        }
+
+        // Ajustar si se sale por la izquierda
+        if (finalRect.left < 5) {
+            this.overlay.style.left = `${5 + window.scrollX}px`;
+        }
+
+        // Ajustar si se sale por arriba
+        if (finalRect.top < 5) {
+            this.overlay.style.top = `${5 + window.scrollY}px`;
+        }
+
+        // Ajustar si se sale por abajo
+        if (finalRect.bottom > viewportHeight - 5) {
+            const shiftAmount = finalRect.bottom - (viewportHeight - 5);
+            this.overlay.style.top = `${parseFloat(this.overlay.style.top) - shiftAmount}px`;
+        }
+
+        // 4. Si está en modo móvil, forzar modal
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile && this.options.mode === 'dropdown') {
+            // Convertir a modal en móvil
+            Object.assign(this.overlay.style, {
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                background: 'rgba(0,0,0,0.4)',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '20px',
+                backdropFilter: 'blur(2px)',
+                zIndex: 10000
+            });
+
+            calendar.style.maxHeight = '80vh';
+            calendar.style.overflowY = 'auto';
+            calendar.style.position = 'relative';
+            calendar.style.margin = 'auto';
         }
     }
 
@@ -442,6 +585,8 @@ class RojeruDatePicker {
         this.state.start = null;
         this.state.end = null;
         this.state.time = this.options.includeTime ? '00:00' : null;
+        // ✅ RESTABLECER currentView a la fecha actual
+        this.state.currentView = new Date();
         this.options.input.value = '';
 
         // Actualizar botón de limpiar
