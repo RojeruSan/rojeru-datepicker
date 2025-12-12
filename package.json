@@ -1,0 +1,47 @@
+{
+  "name": "rojeru-datepicker",
+  "version": "1.0.1",
+  "description": "Una librería de selector de fechas moderna, ligera y personalizable con soporte para selección simple, rangos, hora, y modo oscuro automático.",
+  "main": "dist/rojeru-datepicker.js",
+  "module": "dist/rojeru-datepicker.js",
+  "style": "dist/rojeru-datepicker.css",
+  "files": [
+    "dist",
+    "src",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node build.js",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "datepicker",
+    "calendar",
+    "date",
+    "picker",
+    "javascript",
+    "vanilla-js",
+    "rojeru",
+    "date-range"
+  ],
+  "author": "Rogelio Urieta Camacho (RojeruSan)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rojerusan/rojeru-datepicker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rojerusan/rojeru-datepicker/issues"
+  },
+  "homepage": "https://github.com/rojerusan/rojeru-datepicker#readme",
+  "devDependencies": {
+    "clean-css-cli": "^5.6.3",
+    "terser": "^5.19.2"
+  },
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

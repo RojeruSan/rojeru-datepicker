@@ -1,0 +1,747 @@
+/* rojeru-datepicker.css v1.0.1 */
+.rojeru-datepicker-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 60px;
+    z-index: 10000;
+    backdrop-filter: blur(2px);
+}
+
+/* Dropdown mode */
+.rojeru-datepicker-overlay[data-mode="dropdown"] {
+    position: absolute;
+    width: auto;
+    height: auto;
+    background: transparent;
+    backdrop-filter: none;
+    padding: 0;
+}
+
+.rojeru-datepicker {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    padding: 1.2rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    max-width: 340px;
+    width: 90vw;
+    box-sizing: border-box;
+    z-index: 10001;
+    color: #334155; /* Color de texto por defecto para modo claro */
+}
+
+.rojeru-datepicker.rojeru-dark-mode {
+    background: #1e293b;
+    color: #f1f5f9;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Header */
+.rojeru-datepicker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 0.5rem;
+}
+
+.rojeru-datepicker-nav {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    color: #334155; /* Color de flechas en modo claro */
+}
+
+.rojeru-datepicker-nav:hover {
+    background: #e2e8f0;
+    border-color: #94a3b8;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-nav {
+    background: #334155;
+    border-color: #475569;
+    color: #e2e8f0; /* Color de flechas en modo oscuro */
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-nav:hover {
+    background: #475569;
+    border-color: #64748b;
+}
+
+.rojeru-datepicker-controls {
+    display: flex;
+    gap: 0.5rem;
+    flex: 1;
+    justify-content: center;
+}
+
+.rojeru-datepicker-month,
+.rojeru-datepicker-year,
+.rojeru-datepicker-time-input {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+    color: #334155;
+}
+
+.rojeru-datepicker-month:hover,
+.rojeru-datepicker-year:hover,
+.rojeru-datepicker-time-input:hover {
+    border-color: #94a3b8;
+}
+
+.rojeru-datepicker-month:focus,
+.rojeru-datepicker-year:focus,
+.rojeru-datepicker-time-input:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-month,
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-year,
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-time-input {
+    background: #334155;
+    border-color: #475569;
+    color: #e2e8f0;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-month:hover,
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-year:hover,
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-time-input:hover {
+    border-color: #64748b;
+}
+
+/* Body */
+.rojeru-datepicker-body {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-bottom: 1rem;
+}
+
+.rojeru-datepicker-weekday {
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #64748b;
+    padding: 0.4rem 0;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-weekday {
+    color: #94a3b8;
+}
+
+.rojeru-datepicker-day {
+    text-align: center;
+    padding: 0.5rem 0;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #334155; /* Color de días en modo claro */
+}
+
+.rojeru-datepicker-day:hover:not(.disabled):not(:disabled) {
+    background: #dbeafe;
+    border-color: #93c5fd;
+    color: #1e40af;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-day {
+    color: #e2e8f0; /* Color de días en modo oscuro */
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-day:hover:not(.disabled):not(:disabled) {
+    background: #334155;
+    border-color: #475569;
+    color: #93c5fd;
+}
+
+.rojeru-datepicker-day.selected {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    font-weight: 600;
+    border-color: #1d4ed8;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-day.selected {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+}
+
+.rojeru-datepicker-day.in-range {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-day.in-range {
+    background: #334155;
+    color: #93c5fd;
+}
+
+.rojeru-datepicker-day.today {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    color: white;
+    font-weight: 600;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-day.today {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    color: white;
+}
+
+.rojeru-datepicker-day.disabled,
+.rojeru-datepicker-day:disabled {
+    color: #94a3b8;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-day.disabled,
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-day:disabled {
+    color: #64748b;
+}
+
+.rojeru-datepicker-day-outside {
+    opacity: 0.4;
+    cursor: default;
+    color: #64748b;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-day-outside {
+    color: #94a3b8;
+}
+
+/* Time section */
+.rojeru-datepicker-time {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #33415b;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-time {
+    color: #cbd5e1;
+}
+
+.rojeru-datepicker-time label {
+    color: inherit;
+}
+
+/* Range info */
+.rojeru-datepicker-range-info {
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    color: #33415b;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-range-info {
+    color: #cbd5e1;
+}
+
+/* Footer */
+.rojeru-datepicker-footer {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.rojeru-datepicker-btn {
+    flex: 1;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.rojeru-datepicker-btn.cancel {
+    background: #f1f5f9;
+    color: #334155;
+}
+
+.rojeru-datepicker-btn.cancel:hover {
+    background: #e2e8f0;
+}
+
+.rojeru-datepicker-btn.accept {
+    background: #3b82f6;
+    color: white;
+}
+
+.rojeru-datepicker-btn.accept:hover:not(:disabled) {
+    background: #2563eb;
+}
+
+.rojeru-datepicker-btn.accept:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.rojeru-datepicker-btn.clear {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.rojeru-datepicker-btn.clear:hover {
+    background: #fde68a;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-btn.cancel {
+    background: #334155;
+    color: #cbd5e1;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-btn.cancel:hover {
+    background: #475569;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-btn.accept {
+    background: #3b82f6;
+    color: white;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-btn.accept:hover:not(:disabled) {
+    background: #2563eb;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-btn.clear {
+    background: #78350f;
+    color: #fef3c7;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-btn.clear:hover {
+    background: #92400e;
+}
+
+/* Animations */
+@keyframes rojeru-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.rojeru-datepicker {
+    animation: rojeru-fade-in 0.2s ease-out;
+}
+
+/* Year select styling */
+.rojeru-datepicker-year optgroup {
+    font-weight: 600;
+    color: #475569;
+    font-style: normal;
+    padding-top: 4px;
+    border-top: 1px solid #e2e4e8;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-year optgroup {
+    color: #94a3b8;
+    border-top-color: #334155;
+}
+
+.rojeru-datepicker-year option {
+    padding: 4px 8px;
+    color: #334155;
+    background: white;
+}
+
+.rojeru-datepicker-year option[selected] {
+    background-color: #dbeafe !important;
+    color: #1d4ed8 !important;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-year option {
+    color: #e2e8f0;
+    background: #334155;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-year option[selected] {
+    background-color: #1e40af !important;
+    color: #dbeafe !important;
+}
+
+/* Month select styling */
+.rojeru-datepicker-month option {
+    color: #334155;
+    background: white;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-month option {
+    color: #e2e8f0;
+    background: #334155;
+}
+
+/* Time input styling */
+.rojeru-datepicker-time-input::-webkit-calendar-picker-indicator {
+    filter: invert(0.5);
+    cursor: pointer;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-time-input::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .rojeru-datepicker {
+        max-width: 95vw;
+        margin: 10px;
+    }
+
+    .rojeru-datepicker-body {
+        gap: 4px;
+    }
+
+    .rojeru-datepicker-day {
+        padding: 0.6rem 0;
+        font-size: 0.9rem;
+    }
+}
+
+/* Accessibility */
+.rojeru-datepicker-day:focus,
+.rojeru-datepicker-nav:focus,
+.rojeru-datepicker-btn:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    z-index: 1;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-day:focus,
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-nav:focus,
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-btn:focus {
+    outline-color: #60a5fa;
+}
+
+.rojeru-datepicker-title {
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0 0 16px 0;
+    padding: 0 0 10px 0;
+    color: var(--rojeru-secondary-800, #1e293b);
+    border-bottom: 1px solid var(--rojeru-secondary-200, #e2e8f0);
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-title {
+    color: var(--rojeru-secondary-100, #f1f5f9);
+    border-bottom-color: var(--rojeru-secondary-700, #334155);
+}
+
+/* ==================== */
+/* BOTONES OUTLINE */
+/* ==================== */
+
+/* Botones del footer */
+.rojeru-datepicker-btn.cancel.outline {
+    background: transparent;
+    border: 2px solid #cbd5e1;
+    color: #64748b;
+}
+
+.rojeru-datepicker-btn.cancel.outline:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+    color: #475569;
+}
+
+.rojeru-datepicker-btn.cancel.outline:focus {
+    outline: 2px solid #94a3b8;
+    outline-offset: 2px;
+    background: #f1f5f9;
+}
+
+.rojeru-datepicker-btn.accept.outline {
+    background: transparent;
+    border: 2px solid #3b82f6;
+    color: #3b82f6;
+}
+
+.rojeru-datepicker-btn.accept.outline:hover:not(:disabled) {
+    background: #3b82f6;
+    color: white;
+}
+
+.rojeru-datepicker-btn.accept.outline:focus:not(:disabled) {
+    outline: 2px solid #60a5fa;
+    outline-offset: 2px;
+    background: #3b82f6;
+    color: white;
+}
+
+.rojeru-datepicker-btn.accept.outline:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #94a3b8;
+    color: #94a3b8;
+}
+
+.rojeru-datepicker-btn.accept.outline:disabled:hover {
+    background: transparent;
+    color: #94a3b8;
+}
+
+.rojeru-datepicker-btn.clear.outline {
+    background: transparent;
+    border: 2px solid #f59e0b;
+    color: #92400e;
+}
+
+.rojeru-datepicker-btn.clear.outline:hover {
+    background: #fef3c7;
+    border-color: #d97706;
+    color: #78350f;
+}
+
+.rojeru-datepicker-btn.clear.outline:focus {
+    outline: 2px solid #f59e0b;
+    outline-offset: 2px;
+    background: #fef3c7;
+}
+
+/* Botones de navegación */
+.rojeru-datepicker-nav.outline {
+    background: transparent;
+    border: 2px solid #cbd5e1;
+    color: #334155;
+}
+
+.rojeru-datepicker-nav.outline:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+}
+
+.rojeru-datepicker-nav.outline:focus {
+    outline: 2px solid #94a3b8;
+    outline-offset: 2px;
+    background: #f8fafc;
+}
+
+/* Días del calendario */
+.rojeru-datepicker-day.outline {
+    border: 2px solid transparent;
+    background: transparent;
+}
+
+.rojeru-datepicker-day.outline:hover:not(.disabled):not(:disabled) {
+    border: 2px solid #93c5fd;
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.rojeru-datepicker-day.selected.outline {
+    background: transparent;
+    border: 2px solid #3b82f6;
+    color: #3b82f6;
+    font-weight: 600;
+}
+
+.rojeru-datepicker-day.selected.outline:hover:not(.disabled):not(:disabled) {
+    background: #3b82f6;
+    color: white;
+}
+
+.rojeru-datepicker-day.in-range.outline {
+    background: transparent;
+    border: 2px dashed #93c5fd;
+    color: #1e40af;
+}
+
+.rojeru-datepicker-day.in-range.outline:hover:not(.disabled):not(:disabled) {
+    background: #dbeafe;
+    border-style: solid;
+}
+
+.rojeru-datepicker-day.today.outline {
+    background: transparent;
+    border: 2px solid #16a34a;
+    color: #16a34a;
+    font-weight: 600;
+}
+
+.rojeru-datepicker-day.today.outline:hover:not(.disabled):not(:disabled) {
+    background: #16a34a;
+    color: white;
+}
+
+/* Selects */
+.rojeru-datepicker-month.outline,
+.rojeru-datepicker-year.outline,
+.rojeru-datepicker-time-input.outline {
+    background: transparent;
+    border: 2px solid #cbd5e1;
+    color: #334155;
+}
+
+.rojeru-datepicker-month.outline:hover,
+.rojeru-datepicker-year.outline:hover,
+.rojeru-datepicker-time-input.outline:hover {
+    border-color: #94a3b8;
+    background: white;
+}
+
+.rojeru-datepicker-month.outline:focus,
+.rojeru-datepicker-year.outline:focus,
+.rojeru-datepicker-time-input.outline:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    background: white;
+}
+
+/* Modo oscuro para outline */
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-btn.cancel.outline {
+    border-color: #475569;
+    color: #94a3b8;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-btn.cancel.outline:hover {
+    background: #334155;
+    border-color: #64748b;
+    color: #cbd5e1;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-btn.cancel.outline:focus {
+    outline-color: #64748b;
+    background: #334155;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-btn.accept.outline {
+    border-color: #60a5fa;
+    color: #60a5fa;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-btn.accept.outline:hover:not(:disabled) {
+    background: #60a5fa;
+    color: #1e293b;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-btn.accept.outline:focus:not(:disabled) {
+    outline-color: #93c5fd;
+    background: #60a5fa;
+    color: #1e293b;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-btn.clear.outline {
+    border-color: #fbbf24;
+    color: #fbbf24;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-btn.clear.outline:hover {
+    background: #78350f;
+    border-color: #f59e0b;
+    color: #fef3c7;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-btn.clear.outline:focus {
+    outline-color: #f59e0b;
+    background: #78350f;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-day.outline:hover:not(.disabled):not(:disabled) {
+    border-color: #475569;
+    background: #334155;
+    color: #93c5fd;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-day.selected.outline {
+    border-color: #60a5fa;
+    color: #60a5fa;
+    background: transparent;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-day.selected.outline:hover:not(.disabled):not(:disabled) {
+    background: #60a5fa;
+    color: #1e293b;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-day.in-range.outline {
+    border-color: #475569;
+    border-style: dashed;
+    color: #93c5fd;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-day.in-range.outline:hover:not(.disabled):not(:disabled) {
+    background: #334155;
+    border-style: solid;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-day.today.outline {
+    border-color: #22c55e;
+    color: #22c55e;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-day.today.outline:hover:not(.disabled):not(:disabled) {
+    background: #22c55e;
+    color: #1e293b;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-nav.outline {
+    border-color: #475569;
+    color: #e2e8f0;
+    background: transparent;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-nav.outline:hover {
+    background: #334155;
+    border-color: #64748b;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-nav.outline:focus {
+    outline-color: #64748b;
+    background: #334155;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-month.outline,
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-year.outline,
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-time-input.outline {
+    border-color: #475569;
+    color: #e2e8f0;
+    background: transparent;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-month.outline:hover,
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-year.outline:hover,
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-time-input.outline:hover {
+    border-color: #64748b;
+    background: #334155;
+}
+
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-month.outline:focus,
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-year.outline:focus,
+.rojeru-datepicker.rojeru-dark-mode .rojeru-datepicker-time-input.outline:focus {
+    outline-color: #60a5fa;
+    background: #334155;
+}

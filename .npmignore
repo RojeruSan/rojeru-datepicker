@@ -1,0 +1,12 @@
+node_modules/
+*.log
+*.tmp
+.DS_Store
+.vscode/
+.idea/
+test/
+examples/
+coverage/
+*.config.js
+webpack.config.js
+rollup.config.js
